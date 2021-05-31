@@ -15,19 +15,19 @@ function makeResolveFn(promise){
         }
 
         const promise = rFn.Promise;
+        
         /**
+         * 
          * if argument and promise refer to the same object
          * reject `promise` with a `TypeError' as the reason.
-         */
-        if(argument === promise){
-            rejectPromise(promise,TypeError)
-        }
-        /**
+         * 
          * determine if the argument is a promise-liked object
          * if it is, do a new resolution 
          * else fulfill the promise
          */
-        if(isObject(argument) && isFunction(argument.then)){
+        if(argument === promise){
+            rejectPromise(promise,new TypeError("error"))
+        }else if(isObject(argument) && isFunction(argument.then)){
             resolveThenableJob(promise,argument,argument.then)
         }else{
             const promiseResult = argument;
