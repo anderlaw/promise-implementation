@@ -13,7 +13,7 @@ function makeResolveFn(promise){
         if(rFn.AlreadyResolved){
             return;
         }
-
+        rFn.AlreadyResolved = true;
         const promise = rFn.Promise;
         
         /**
@@ -61,6 +61,7 @@ function makeRejectFn(promise){
             return;
         }
         
+        rFn.AlreadyResolved = true;
         const promise = rFn.Promise;
         const promiseResult = argument;
         // reject the promise
