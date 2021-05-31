@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test":"jest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "jest": "^27.0.1"
+  },
+  "dependencies": {
+    "promises-aplus-tests": "^2.1.2"
   }
 }

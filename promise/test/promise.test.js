@@ -1,10 +1,14 @@
-const { expect } = require("@jest/globals");
-const { test } = require("jest-circus");
-const {Promise} = require("../core")
+require("../index");
 
-describe('Promise constructor', () => {
-    it("executor muse be a function",()=>{
-        expect(()=>new Promise()).toThrowError(TypeError)
-        expect(()=>new Promise(()=>{})).toBeCalled
+const resolved = (value)=>{
+    return new Promise((res,rej)=>{
+        res(value)
     })
+}
+var promise = resolved('dummy').then(function () {
+    return promise;
+});
+
+promise.then(null, function (reason) {
+    console.log(reason instanceof TypeError);
 });
