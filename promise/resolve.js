@@ -27,8 +27,16 @@ function makeResolveFn(promise){
          */
         if(argument === promise){
             rejectPromise(promise,new TypeError("error"))
-        }else if(isObject(argument) && isFunction(argument.then)){
-            resolveThenableJob(promise,argument,argument.then)
+        }else if(isObject(argument)){
+            let thenFn = argument.then;
+            if(thenFn && 'get' in thenFn){
+                thenFn = thenFn.get();
+            }
+            if(isFunction(thenFn)){
+                resolveThenableJob(promise,argument,thenFn)
+            }else{
+                fulfillPromise(promise,argument)
+            }
         }else{
             const promiseResult = argument;
             // fulfill the promise
