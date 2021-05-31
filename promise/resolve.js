@@ -28,10 +28,11 @@ function makeResolveFn(promise){
         if(argument === promise){
             rejectPromise(promise,new TypeError("error"))
         }else if(isObject(argument)){
+            console.log(argument)
             let thenFn = argument.then;
-            if(thenFn && 'get' in thenFn){
-                thenFn = thenFn.get();
-            }
+            // if(thenFn && 'get' in thenFn){
+            //     thenFn = thenFn.get();
+            // }
             if(isFunction(thenFn)){
                 resolveThenableJob(promise,argument,thenFn)
             }else{

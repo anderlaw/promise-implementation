@@ -5,10 +5,22 @@ const resolved = (value)=>{
         res(value)
     })
 }
+let numberOfTimesThenWasRetrieved = 0;
 var promise = resolved('dummy').then(function () {
-    return promise;
+    return Object.create(null,{
+        then: {
+            get: function () {
+                ++numberOfTimesThenWasRetrieved;
+                return function thenMethodForX(onFulfilled) {
+                    onFulfilled();
+                };
+            }
+        }
+    })
 });
 
-promise.then(null, function (reason) {
-    console.log(reason instanceof TypeError);
+promise.then(()=>{
+    console.log(numberOfTimesThenWasRetrieved)
+}, function (reason) {
+    console.log('rej',reason instanceof TypeError);
 });

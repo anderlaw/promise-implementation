@@ -8,7 +8,7 @@ const toString = obj.toString;
  * @returns {boolean} True if value is an Object, otherwise false
  */
 function isObject(val) {
-    return val !== null && typeof val === 'object';
+    return val !== null && typeof val === 'object' || typeof val === 'function';
 }
 
 /**
