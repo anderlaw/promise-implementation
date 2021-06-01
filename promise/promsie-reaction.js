@@ -17,15 +17,13 @@ function executeReaction(reaction,value){
             capability.resolve(handlerResult);
         }
     }else{
-        setTimeout(()=>{
-            try{
-                handlerResult = handler(value);
-                capability.resolve(handlerResult);
-            }catch(e){
-                capability.reject(e);
-            }
-        },0)
-        
+        try{
+            handlerResult = handler(value);
+
+            capability.resolve(handlerResult);
+        }catch(e){
+            capability.reject(e);
+        }
     }
 }
 module.exports = {
