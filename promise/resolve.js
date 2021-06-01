@@ -13,7 +13,7 @@ function makeResolveFn(promise){
         if(rFn.AlreadyResolved){
             return;
         }
-
+        rFn.AlreadyResolved = true;
         const promise = rFn.Promise;
         
         /**
@@ -28,16 +28,17 @@ function makeResolveFn(promise){
         if(argument === promise){
             rejectPromise(promise,new TypeError("error"))
         }else if(isObject(argument)){
-            console.log(argument)
-            let thenFn = argument.then;
-            // if(thenFn && 'get' in thenFn){
-            //     thenFn = thenFn.get();
-            // }
-            if(isFunction(thenFn)){
-                resolveThenableJob(promise,argument,thenFn)
-            }else{
-                fulfillPromise(promise,argument)
+            try{
+                let thenFn = argument.then;
+                if(isFunction(thenFn)){
+                    resolveThenableJob(promise,argument,thenFn)
+                }else{
+                    fulfillPromise(promise,argument)
+                }
+            }catch(e){
+                rejectPromise(promise,e)
             }
+            
         }else{
             const promiseResult = argument;
             // fulfill the promise
@@ -60,6 +61,7 @@ function makeRejectFn(promise){
             return;
         }
         
+        rFn.AlreadyResolved = true;
         const promise = rFn.Promise;
         const promiseResult = argument;
         // reject the promise
