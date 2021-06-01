@@ -17,18 +17,21 @@ module.exports = function then(onFulfilled,onRejected){
         Capability:newCapability
     }
 
-    //determine what to do next by the state of this(promise)
-    switch(promise.PromiseState){
-        case "fulfilled":
-            executeReaction(fulfillReaction,promise.PromiseResult)
-            break;
-        case "rejected":
-            executeReaction(rejectReaction,promise.PromiseResult)
-            break;
-        default:
-            promise.PromiseFulfillReactions.push(fulfillReaction);
-            promise.PromiseRejectReactions.push(rejectReaction);
-            break;
-    }
+    //return promise first
+    //during nextTick determine what to do next by the state of this(promise)
+    setTimeout(()=>{
+        switch(promise.PromiseState){
+            case "fulfilled":
+                executeReaction(fulfillReaction,promise.PromiseResult)
+                break;
+            case "rejected":
+                executeReaction(rejectReaction,promise.PromiseResult)
+                break;
+            default:
+                promise.PromiseFulfillReactions.push(fulfillReaction);
+                promise.PromiseRejectReactions.push(rejectReaction);
+                break;
+        }
+    },0)
     return newCapability.promise
 }
