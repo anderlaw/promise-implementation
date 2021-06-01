@@ -7,13 +7,14 @@ const fulfillPromise = require('./fulfill')
  * @param {Promise} promise 
  * @returns Function
  */
-function makeResolveFn(promise){
+function makeResolveFn(promise,AlreadyResolved){
+
     const rFn = function(argument){
         // only resolve once
-        if(rFn.AlreadyResolved){
+        if(rFn.AlreadyResolved.value){
             return;
         }
-        rFn.AlreadyResolved = true;
+        rFn.AlreadyResolved.value = true;
         const promise = rFn.Promise;
         
         /**
@@ -46,7 +47,7 @@ function makeResolveFn(promise){
         }
     }
     rFn.Promise = promise;
-    rFn.AlreadyResolved = false;
+    rFn.AlreadyResolved = AlreadyResolved;
     return rFn;
 }
 /**
@@ -54,24 +55,23 @@ function makeResolveFn(promise){
  * @param {Promise} promise 
  * @returns Function
  */
-function makeRejectFn(promise){
+function makeRejectFn(promise,AlreadyResolved){
     const rFn = function(argument){
         // only resolve once
-        if(rFn.AlreadyResolved){
+        if(rFn.AlreadyResolved.value){
             return;
         }
         
-        rFn.AlreadyResolved = true;
+        rFn.AlreadyResolved.value = true;
         const promise = rFn.Promise;
         const promiseResult = argument;
         // reject the promise
         rejectPromise(promise,promiseResult)
     }
     rFn.Promise = promise;
-    rFn.AlreadyResolved = false;
+    rFn.AlreadyResolved = AlreadyResolved;
     return rFn;
 }
-
 function resolveThenableJob(promise,resolution,thenFn){
     const newResolvingFunctions = createResolvingFunctions(promise);
     const resolveFn = newResolvingFunctions.resolve;
@@ -79,9 +79,12 @@ function resolveThenableJob(promise,resolution,thenFn){
     thenFn.call(resolution,resolveFn,rejectFn);
 }
 function createResolvingFunctions(promise){
+    const AlreadyResolved = {
+        value:false
+    }
     return {
-        resolve:makeResolveFn(promise),
-        reject:makeRejectFn(promise)
+        resolve:makeResolveFn(promise,AlreadyResolved),
+        reject:makeRejectFn(promise,AlreadyResolved)
     }
 }
 module.exports = {
