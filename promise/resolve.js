@@ -29,8 +29,9 @@ function makeResolveFn(promise,AlreadyResolved){
         if(argument === promise){
             rejectPromise(promise,new TypeError("error"))
         }else if(isObject(argument)){
+            let thenFn;
             try{
-                let thenFn = argument.then;
+                thenFn = argument.then;
                 if(isFunction(thenFn)){
                     resolveThenableJob(promise,argument,thenFn)
                 }else{
@@ -39,6 +40,7 @@ function makeResolveFn(promise,AlreadyResolved){
             }catch(e){
                 rejectPromise(promise,e)
             }
+            
             
         }else{
             const promiseResult = argument;
@@ -76,7 +78,12 @@ function resolveThenableJob(promise,resolution,thenFn){
     const newResolvingFunctions = createResolvingFunctions(promise);
     const resolveFn = newResolvingFunctions.resolve;
     const rejectFn = newResolvingFunctions.reject;
-    thenFn.call(resolution,resolveFn,rejectFn);
+    try{
+        thenFn.call(resolution,resolveFn,rejectFn);
+    }catch(e){
+        rejectFn(e)
+    }
+    return newResolvingFunctions;
 }
 function createResolvingFunctions(promise){
     const AlreadyResolved = {
