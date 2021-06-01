@@ -1,5 +1,5 @@
 require("../index");
-const {createResolvingFunctions} = require("../resolve")
+const {createResolvingFunctions} = require("../src/resolve")
 module.exports = {
     resolved(value){
         return new Promise((res)=>{
