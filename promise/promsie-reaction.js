@@ -1,7 +1,9 @@
 const {isFunction} = require("./utils")
 function triggerReactions(reactions,value){
     reactions.forEach(reaction=>{
-        executeReaction(reaction,value)
+        setTimeout(()=>{
+            executeReaction(reaction,value)
+        },0)
     })
 }
 function executeReaction(reaction,value){
